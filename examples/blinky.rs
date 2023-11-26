@@ -8,7 +8,7 @@ use cortex_m;
 use fugit::HertzU32 as Hertz;
 
 #[cortex_m_rt::entry]
-unsafe fn start() -> ! {
+fn start() -> ! {
     let mut p = pac::Peripherals::take().unwrap();
 
     let mut rcc = p
