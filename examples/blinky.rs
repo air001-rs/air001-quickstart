@@ -3,49 +3,51 @@
 
 use panic_halt as _;
 
-use air001_pac as pac;
+use air001_hal::{pac, prelude::*};
+use cortex_m;
+use fugit::HertzU32 as Hertz;
 
 #[cortex_m_rt::entry]
 unsafe fn start() -> ! {
-    let p = pac::Peripherals::steal();
+    let mut p = pac::Peripherals::take().unwrap();
 
-    let rcc = &p.RCC;
-    let gpiob = &p.GPIOB;
+    let mut rcc = p
+        .RCC
+        .configure()
+        .sysclk(Hertz::MHz(48))
+        .freeze(&mut p.FLASH);
 
-    // enable GPIOB
-    rcc.iopenr.modify(|_, w| w.gpioben().set_bit());
+    let gpiob = p.GPIOB.split(&mut rcc);
 
-    // output mode
-    gpiob.moder.modify(|_, w| {
-        w.mode1().bits(1);
-        w.mode0().bits(1);
-        w.mode3().bits(1)
-    });
-
-    // enable pull-up
-    gpiob.pupdr.modify(|_, w| {
-        w.pupd1().bits(1);
-        w.pupd0().bits(1);
-        w.pupd3().bits(1)
+    // Configure output mode
+    let (mut red, mut green, mut blue) = cortex_m::interrupt::free(|cs| {
+        (
+            gpiob.pb1.into_push_pull_output(cs),
+            gpiob.pb0.into_push_pull_output(cs),
+            gpiob.pb3.into_push_pull_output(cs),
+        )
     });
 
     loop {
-        gpiob.bsrr.write(|w| w.bs1().set_bit());
-        gpiob.brr.write(|w| w.br3().set_bit());
+        red.set_high().ok();
+        green.set_low().ok();
+        blue.set_low().ok();
         delay();
 
-        gpiob.bsrr.write(|w| w.bs0().set_bit());
-        gpiob.brr.write(|w| w.br1().set_bit());
+        red.set_low().ok();
+        green.set_high().ok();
+        blue.set_low().ok();
         delay();
 
-        gpiob.bsrr.write(|w| w.bs3().set_bit());
-        gpiob.brr.write(|w| w.br0().set_bit());
+        red.set_low().ok();
+        green.set_low().ok();
+        blue.set_high().ok();
         delay();
     }
 }
 
 fn delay() {
-    for _i in 1..300000 {
+    for _i in 1..200000 {
         cortex_m::asm::nop();
     }
 }

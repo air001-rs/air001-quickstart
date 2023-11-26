@@ -7,7 +7,9 @@ edition = "2021"
 cortex-m = "0.7.7"
 cortex-m-rt = "0.7.3"
 panic-halt = "0.2.0"
-air001-pac = "0.0.1"
+air001-pac = "0.0.2"
+fugit = "0.3.7"
+air001-hal = { git = "https://github.com/air001-rs/air001-hal", branch = "main" }
 
 [profile.release]
 codegen-units = 1 # better optimizations
