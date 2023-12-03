@@ -5,13 +5,14 @@ version = 3
 [[package]]
 name = "air001-hal"
 version = "0.1.0"
-source = "git+https://github.com/air001-rs/air001-hal?branch=main#89b095e1645ea8373b40ccb83e25a08229dbc7ce"
+source = "git+https://github.com/air001-rs/air001-hal?branch=main#e16b626ceec3bb445a35042f66c0e08afee9aa77"
 dependencies = [
  "air001-pac",
  "cortex-m",
  "cortex-m-rt",
  "embedded-hal",
  "fugit",
+ "nb 1.1.0",
 ]
 
 [[package]]
@@ -34,7 +35,8 @@ dependencies = [
  "air001-pac",
  "cortex-m",
  "cortex-m-rt",
- "fugit",
+ "cortex-m-semihosting",
+ "nb 1.1.0",
  "panic-halt",
 ]
 
@@ -84,6 +86,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "cortex-m-semihosting"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c23234600452033cc77e4b761e740e02d2c4168e11dbf36ab14a0f58973592b0"
+dependencies = [
+ "cortex-m",
 ]
 
 [[package]]
@@ -140,9 +151,9 @@ checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.69"
+version = "1.0.70"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "134c189feb4956b20f6f547d2cf727d4c0fe06722b20a0eec87ed445a97f92da"
+checksum = "39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b"
 dependencies = [
  "unicode-ident",
 ]

@@ -5,17 +5,12 @@ use panic_halt as _;
 
 use air001_hal::{pac, prelude::*};
 use cortex_m;
-use fugit::HertzU32 as Hertz;
 
 #[cortex_m_rt::entry]
 fn start() -> ! {
     let mut p = pac::Peripherals::take().unwrap();
 
-    let mut rcc = p
-        .RCC
-        .configure()
-        .sysclk(Hertz::MHz(48))
-        .freeze(&mut p.FLASH);
+    let mut rcc = p.RCC.configure().sysclk(48.mhz()).freeze(&mut p.FLASH);
 
     let gpiob = p.GPIOB.split(&mut rcc);
 
